@@ -59,7 +59,7 @@ public class CarController {
         }
     }
     @PostMapping
-    public ResponseEntity saveNewCar(@RequestBody CarDto car) {
+    public ResponseEntity saveNewCar(@Valid @RequestBody CarDto car) {
         Car entity = convertToEntity(car);
         carRepository.save(entity);
         HttpHeaders headers = new HttpHeaders();
@@ -73,7 +73,7 @@ public class CarController {
     }
 
     @PutMapping("/{carId}")
-    public ResponseEntity updateCar(@PathVariable Long carId,@RequestBody CarDto carDto) {
+    public ResponseEntity updateCar(@PathVariable Long carId,@Valid @RequestBody CarDto carDto) {
         Optional<Car> currentEmp =
                 carRepository.findById(carId);
         if(currentEmp.isPresent()) {
