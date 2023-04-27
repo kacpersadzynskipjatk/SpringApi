@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import s28646.sricar.dto.CarDto;
 import s28646.sricar.dto.CarShopDetailsDto;
 import s28646.sricar.dto.CarShopDto;
-import s28646.sricar.model.Car;
 import s28646.sricar.model.CarShop;
 
 @Component
