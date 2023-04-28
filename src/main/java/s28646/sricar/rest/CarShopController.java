@@ -12,6 +12,7 @@ import s28646.sricar.dto.CarDto;
 import s28646.sricar.dto.CarShopDetailsDto;
 import s28646.sricar.dto.CarShopDto;
 import s28646.sricar.dto.mapper.CarShopDtoMapper;
+import s28646.sricar.model.Car;
 import s28646.sricar.model.CarShop;
 import s28646.sricar.repo.CarRepository;
 import s28646.sricar.repo.CarShopRepository;
@@ -51,6 +52,15 @@ public class CarShopController {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/{carShopId}/cars")
+    public ResponseEntity<Collection<CarDto>> getCarsByCarShopId(@PathVariable Long carShopId) {
+        List<Car> allCars = carRepository.findCarsByCarShopId(carShopId);
+        List<CarDto> result = allCars.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 //    @PostMapping
 //    public ResponseEntity saveNewCar(@RequestBody CarDto
 //                                             car) {
@@ -87,6 +97,12 @@ public class CarShopController {
 //        carRepository.deleteById(carId);
 //        return new ResponseEntity(HttpStatus.NO_CONTENT);
 //    }
-//
+    private CarDto convertToDto(Car c){
+        return modelMapper.map(c, CarDto.class);
+    }
+
+    private Car convertToEntity(CarDto dto){
+        return modelMapper.map(dto, Car.class);
+    }
 }
 

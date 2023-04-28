@@ -19,7 +19,7 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Car Brand is required")
     @Size(min = 2, max = 255)
     private String carBrand;
     @NotBlank
