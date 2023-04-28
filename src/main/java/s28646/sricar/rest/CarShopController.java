@@ -13,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import s28646.sricar.dto.CarDto;
 import s28646.sricar.dto.CarShopDetailsDto;
 import s28646.sricar.dto.CarShopDto;
+import s28646.sricar.dto.ErrorMessage;
 import s28646.sricar.dto.mapper.CarShopDtoMapper;
 import s28646.sricar.model.Car;
 import s28646.sricar.model.CarShop;
@@ -22,9 +23,8 @@ import s28646.sricar.repo.CarShopRepository;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import java.net.URI;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -101,30 +101,56 @@ public class CarShopController {
     }
 
     //dodanie asocjacji
-//    @PostMapping("/{carShopId}/cars/")
-//    public ResponseEntity saveNewCarForCarShop(@Valid @RequestBody CarShopDto carShop) {
-//        CarShop entity = carShopDtoMapper.convertToEntity(carShop);
-//        carShopRepository.save(entity);
-//        HttpHeaders headers = new HttpHeaders();
-//        URI location = ServletUriComponentsBuilder
-//                .fromCurrentRequest()
-//                .path("/{id}")
-//                .buildAndExpand(entity.getId())
-//                .toUri();
-//        headers.add("Location", location.toString());
-//        return new ResponseEntity(headers, HttpStatus.CREATED);
-//    }
+    @PostMapping("/{carShopId}/cars/")
+    public ResponseEntity connectCarToCarShop(@Valid @RequestBody CarDto car) {
+        Car entity = convertToEntity(car);
+        carRepository.save(entity);
+        HttpHeaders headers = new HttpHeaders();
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(entity.getId())
+                .toUri();
+        headers.add("Location", location.toString());
+        return new ResponseEntity(headers, HttpStatus.CREATED);
+    }
 
     //usunięcie asocjacji
-//    @DeleteMapping("/{carShopId}/cars/{carId}")
+    @DeleteMapping("/{carShopId}/cars/{carId}")
+    public ResponseEntity deleteCarformCarShop(@PathVariable Long carId)
+    {
+        Optional<Car> currentCar = carRepository.findById(carId);
+        if(currentCar.isPresent()){
+            carRepository.deleteById(carId);
+            return new ResponseEntity(HttpStatus.OK);
+        }else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+    }
 
-//
-//    @DeleteMapping("/{carId}")
-//    public ResponseEntity deleteCar(@PathVariable Long carId)
-//    {
-//        carRepository.deleteById(carId);
-//        return new ResponseEntity(HttpStatus.NO_CONTENT);
-//    }
+
+    @DeleteMapping("/{carShopId}")
+    public Object deleteCarShop(@Valid @PathVariable Long carShopId)
+    {
+        Optional<CarShop> currentCarShop = carShopRepository.findById(carShopId);
+
+        if(currentCarShop.isPresent()){
+            CarShop currShop = currentCarShop.get();
+            if (currShop.getCars().isEmpty()){
+                carShopRepository.deleteById(carShopId);
+                return new ResponseEntity(HttpStatus.OK);
+            }else {
+                //return new ResponseEntity(HttpStatus.BAD_REQUEST);
+                Map<String, List<String>> errors = new HashMap<String, List<String>>() {};
+                List<String> message = new LinkedList<>() {};
+                message.add("Cannot delete car shop it has reference to its cars");
+                errors.put("Message", message);
+                return new ErrorMessage(HttpStatus.BAD_REQUEST, LocalDateTime.now(), errors, "");
+            }
+        }else {
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        }
+    }
     private CarDto convertToDto(Car c){
         return modelMapper.map(c, CarDto.class);
     }

@@ -98,7 +98,7 @@ public class CarController {
             carRepository.deleteById(carId);
             return new ResponseEntity(HttpStatus.OK);
         }else {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
     }
 
