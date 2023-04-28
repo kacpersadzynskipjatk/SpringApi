@@ -77,13 +77,13 @@ public class CarController {
 
     @PutMapping("/{carId}")
     public ResponseEntity updateCar(@PathVariable Long carId,@Valid @RequestBody CarDto carDto) {
-        Optional<Car> currentEmp =
+        Optional<Car> currentCar =
                 carRepository.findById(carId);
-        if(currentEmp.isPresent()) {
+        if(currentCar.isPresent()) {
             carDto.setId(carId);
             Car entity = convertToEntity(carDto);
             carRepository.save(entity);
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+            return new ResponseEntity(HttpStatus.OK);
         } else {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
@@ -93,7 +93,7 @@ public class CarController {
     public ResponseEntity deleteCar(@PathVariable Long carId)
     {
         carRepository.deleteById(carId);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }

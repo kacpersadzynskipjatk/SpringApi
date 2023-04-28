@@ -85,21 +85,19 @@ public class CarShopController {
         headers.add("Location", location.toString());
         return new ResponseEntity(headers, HttpStatus.CREATED);
     }
-//
-//    @PutMapping("/{carId}")
-//    public ResponseEntity updateCar(@PathVariable Long
-//                                            carId, @RequestBody CarDto carDto) {
-//        Optional<Car> currentEmp =
-//                carRepository.findById(carId);
-//        if(currentEmp.isPresent()) {
-//            carDto.setId(carId);
-//            Car entity = convertToEntity(carDto);
-//            carRepository.save(entity);
-//            return new ResponseEntity(HttpStatus.NO_CONTENT);
-//        } else {
-//            return new ResponseEntity(HttpStatus.NOT_FOUND);
-//        }
-//    }
+
+    @PutMapping("/{carShopId}")
+    public ResponseEntity updateCarShop(@PathVariable Long carShopId, @RequestBody CarShopDto carShopDto) {
+        Optional<CarShop> currentCarShop = carShopRepository.findById(carShopId);
+        if(currentCarShop.isPresent()) {
+            carShopDto.setId(carShopId);
+            CarShop entity = carShopDtoMapper.convertToEntity(carShopDto);
+            carShopRepository.save(entity);
+            return new ResponseEntity(HttpStatus.OK);
+        } else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+    }
 //
 //    @DeleteMapping("/{carId}")
 //    public ResponseEntity deleteCar(@PathVariable Long carId)
