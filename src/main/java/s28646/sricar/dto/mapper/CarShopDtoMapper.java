@@ -21,7 +21,7 @@ public class CarShopDtoMapper {
         return modelMapper.map(e, CarShopDto.class);
     }
 
-    private CarShop convertToEntity(CarDto dto) {
+    public CarShop convertToEntity(CarShopDto dto) {
         return modelMapper.map(dto, CarShop.class);
     }
 }
