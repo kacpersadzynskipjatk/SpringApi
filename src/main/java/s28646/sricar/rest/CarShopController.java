@@ -102,17 +102,23 @@ public class CarShopController {
 
     //dodanie asocjacji
     @PostMapping("/{carShopId}/cars/")
-    public ResponseEntity connectCarToCarShop(@Valid @RequestBody CarDto car) {
-        Car entity = convertToEntity(car);
-        carRepository.save(entity);
-        HttpHeaders headers = new HttpHeaders();
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(entity.getId())
-                .toUri();
-        headers.add("Location", location.toString());
-        return new ResponseEntity(headers, HttpStatus.CREATED);
+    public ResponseEntity connectCarToCarShop(@Valid @RequestBody CarDto carDto, @PathVariable Long carShopId) {
+        Optional<CarShop> currentCarShop = carShopRepository.findById(carShopId);
+        if(currentCarShop.isPresent()) {
+            Car entity = convertToEntity(carDto);
+            entity.setCarShop(currentCarShop.get());
+            carRepository.save(entity);
+
+            HttpHeaders headers = new HttpHeaders();
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(entity.getId())
+                    .toUri();
+            headers.add("Location", location.toString());
+            return new ResponseEntity(headers, HttpStatus.CREATED);
+        }
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
     //usunięcie asocjacji
