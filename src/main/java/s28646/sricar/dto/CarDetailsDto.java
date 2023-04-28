@@ -1,7 +1,5 @@
-package s28646.sricar.model;
+package s28646.sricar.dto;
 
-
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -9,14 +7,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Car {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class CarDetailsDto {
     private Long id;
 
     @NotBlank(message = "Car Brand is required")
@@ -30,7 +27,5 @@ public class Car {
     private String carFuelType;
     private String carTransmission;
 
-    @ManyToOne
-    @JoinColumn(name="carShop_id")
-    private CarShop carShop;
+    private CarShopDto carShop;
 }

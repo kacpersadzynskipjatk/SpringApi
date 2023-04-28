@@ -55,13 +55,13 @@ public class DataInitializer implements ApplicationRunner {
         CarShop cs1 = CarShop.builder().name("FreshCars").cars(new HashSet<>()).build();
         CarShop cs2 = CarShop.builder().name("FinestCars").cars(new HashSet<>()).build();
 
-        c1.setCar(cs1);
+        c1.setCarShop(cs1);
         cs1.getCars().add(c1);
 
-        c2.setCar(cs1);
+        c2.setCarShop(cs1);
         cs1.getCars().add(c2);
 
-        c3.setCar(cs2);
+        c3.setCarShop(cs2);
         cs2.getCars().add(c3);
 
         carShopRepository.saveAll(Arrays.asList(cs1, cs2));

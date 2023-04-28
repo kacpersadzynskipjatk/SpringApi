@@ -16,7 +16,7 @@ public class CarShop {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "car")
+    @OneToMany(mappedBy = "carShop")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<Car> cars;

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import s28646.sricar.dto.CarDetailsDto;
 import s28646.sricar.dto.CarDto;
 import s28646.sricar.model.Car;
 import s28646.sricar.repo.CarRepository;
@@ -31,6 +32,9 @@ public class CarController {
     private CarDto convertToDto(Car e) {
         return modelMapper.map(e, CarDto.class);
     }
+    private CarDetailsDto convertToDetailsDto(Car e) {
+        return modelMapper.map(e, CarDetailsDto.class);
+    }
     private Car convertToEntity(CarDto dto) {
         return modelMapper.map(dto, Car.class);
     }
@@ -45,13 +49,12 @@ public class CarController {
     }
 
     @GetMapping("/{carId}")
-    public ResponseEntity<CarDto>
+    public ResponseEntity<CarDetailsDto>
     getCarById(@PathVariable Long carId) {
-        Optional<Car> car =
-                carRepository.findById(carId);
+        Optional<Car> car = carRepository.findById(carId);
         if(car.isPresent()) {
-            CarDto carDto = convertToDto(car.get());
-            return new ResponseEntity<>(carDto,
+            CarDetailsDto carDetailsDto = convertToDetailsDto(car.get());
+            return new ResponseEntity<>(carDetailsDto,
                     HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null,
