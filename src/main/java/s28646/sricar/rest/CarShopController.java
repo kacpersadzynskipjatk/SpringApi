@@ -1,5 +1,6 @@
 package s28646.sricar.rest;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.CollectionModel;
@@ -73,7 +74,7 @@ public class CarShopController {
     }
 
     @PostMapping
-    public ResponseEntity saveNewCarShop(@RequestBody CarShopDto carShop) {
+    public ResponseEntity saveNewCarShop(@Valid @RequestBody CarShopDto carShop) {
         CarShop entity = carShopDtoMapper.convertToEntity(carShop);
         carShopRepository.save(entity);
         HttpHeaders headers = new HttpHeaders();
@@ -87,7 +88,7 @@ public class CarShopController {
     }
 
     @PutMapping("/{carShopId}")
-    public ResponseEntity updateCarShop(@PathVariable Long carShopId, @RequestBody CarShopDto carShopDto) {
+    public ResponseEntity updateCarShop(@PathVariable Long carShopId,@Valid @RequestBody CarShopDto carShopDto) {
         Optional<CarShop> currentCarShop = carShopRepository.findById(carShopId);
         if(currentCarShop.isPresent()) {
             carShopDto.setId(carShopId);
