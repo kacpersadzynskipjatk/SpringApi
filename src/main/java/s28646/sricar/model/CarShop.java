@@ -2,6 +2,7 @@ package s28646.sricar.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.Set;
@@ -17,6 +18,8 @@ public class CarShop {
     private Long id;
 
     @NotBlank
+    @Size(min = 2, message = "Name too short")
+    @Size(max = 200, message = "Name too long")
     private String name;
 
     @OneToMany(mappedBy = "carShop")

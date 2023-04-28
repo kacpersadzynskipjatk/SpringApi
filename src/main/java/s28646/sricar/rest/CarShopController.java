@@ -99,6 +99,25 @@ public class CarShopController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
+
+    //dodanie asocjacji
+//    @PostMapping("/{carShopId}/cars/")
+//    public ResponseEntity saveNewCarForCarShop(@Valid @RequestBody CarShopDto carShop) {
+//        CarShop entity = carShopDtoMapper.convertToEntity(carShop);
+//        carShopRepository.save(entity);
+//        HttpHeaders headers = new HttpHeaders();
+//        URI location = ServletUriComponentsBuilder
+//                .fromCurrentRequest()
+//                .path("/{id}")
+//                .buildAndExpand(entity.getId())
+//                .toUri();
+//        headers.add("Location", location.toString());
+//        return new ResponseEntity(headers, HttpStatus.CREATED);
+//    }
+
+    //usunięcie asocjacji
+//    @DeleteMapping("/{carShopId}/cars/{carId}")
+
 //
 //    @DeleteMapping("/{carId}")
 //    public ResponseEntity deleteCar(@PathVariable Long carId)

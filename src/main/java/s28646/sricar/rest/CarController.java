@@ -10,6 +10,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import s28646.sricar.dto.CarDetailsDto;
 import s28646.sricar.dto.CarDto;
 import s28646.sricar.model.Car;
+import s28646.sricar.model.CarShop;
 import s28646.sricar.repo.CarRepository;
 
 import java.net.URI;
@@ -92,8 +93,13 @@ public class CarController {
     @DeleteMapping("/{carId}")
     public ResponseEntity deleteCar(@PathVariable Long carId)
     {
-        carRepository.deleteById(carId);
-        return new ResponseEntity(HttpStatus.OK);
+        Optional<Car> currentCar = carRepository.findById(carId);
+        if(currentCar.isPresent()){
+            carRepository.deleteById(carId);
+            return new ResponseEntity(HttpStatus.OK);
+        }else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
     }
 
 }
