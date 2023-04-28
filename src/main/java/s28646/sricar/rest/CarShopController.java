@@ -123,7 +123,7 @@ public class CarShopController {
 
     //usunięcie asocjacji
     @DeleteMapping("/{carShopId}/cars/{carId}")
-    public ResponseEntity deleteCarformCarShop(@PathVariable Long carId)
+    public ResponseEntity deleteCarfromCarShop(@PathVariable Long carId)
     {
         Optional<Car> currentCar = carRepository.findById(carId);
         if(currentCar.isPresent()){
@@ -136,7 +136,7 @@ public class CarShopController {
 
 
     @DeleteMapping("/{carShopId}")
-    public Object deleteCarShop(@Valid @PathVariable Long carShopId)
+    public ResponseEntity deleteCarShop(@Valid @PathVariable Long carShopId)
     {
         Optional<CarShop> currentCarShop = carShopRepository.findById(carShopId);
 
@@ -146,12 +146,14 @@ public class CarShopController {
                 carShopRepository.deleteById(carShopId);
                 return new ResponseEntity(HttpStatus.OK);
             }else {
-                //return new ResponseEntity(HttpStatus.BAD_REQUEST);
                 Map<String, List<String>> errors = new HashMap<String, List<String>>() {};
                 List<String> message = new LinkedList<>() {};
                 message.add("Cannot delete car shop it has reference to its cars");
                 errors.put("Message", message);
-                return new ErrorMessage(HttpStatus.BAD_REQUEST, LocalDateTime.now(), errors, "");
+                ErrorMessage err = new ErrorMessage(HttpStatus.BAD_REQUEST, LocalDateTime.now(), errors, "");
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(err);
             }
         }else {
             return new ResponseEntity(HttpStatus.NO_CONTENT);

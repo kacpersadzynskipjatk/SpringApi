@@ -55,11 +55,9 @@ public class CarController {
         Optional<Car> car = carRepository.findById(carId);
         if(car.isPresent()) {
             CarDetailsDto carDetailsDto = convertToDetailsDto(car.get());
-            return new ResponseEntity<>(carDetailsDto,
-                    HttpStatus.OK);
+            return new ResponseEntity<>(carDetailsDto, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(null,
-                    HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
     @PostMapping
