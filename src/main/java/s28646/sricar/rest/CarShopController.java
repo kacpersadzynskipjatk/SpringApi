@@ -2,6 +2,7 @@ package s28646.sricar.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,8 +37,8 @@ public class CarShopController {
     private final CarShopDtoMapper carShopDtoMapper;
 
 
-    @GetMapping
-    public ResponseEntity<Collection<CarShopDto>> getCarShops() {
+    @GetMapping(produces = {"application/hal+json"})
+    public ResponseEntity<CollectionModel<CarShopDto>> getCarShops() {
         List<CarShop> allCarShopEntities = carShopRepository.findAll();
         List<CarShopDto> result = allCarShopEntities.stream()
                 .map(carShopDtoMapper::convertToDto)
@@ -46,10 +47,12 @@ public class CarShopController {
             dto.add(createCarShopSelfLink(dto.getId()));
             dto.add(createCarShopCarsLink(dto.getId()));
         }
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        Link linkSelf = linkTo(methodOn(CarShopController.class).getCarShops()).withSelfRel();
+        CollectionModel<CarShopDto> res = CollectionModel.of(result, linkSelf);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @GetMapping("/{carShopId}")
+    @GetMapping(value = "/{carShopId}", produces = {"application/hal+json"})
     public ResponseEntity<CarShopDetailsDto> getCarShopById(@PathVariable Long carShopId) {
         Optional<CarShop> carShop = carShopRepository.findById(carShopId);
         if(carShop.isPresent()) {
