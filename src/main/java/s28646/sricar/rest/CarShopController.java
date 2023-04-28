@@ -2,6 +2,7 @@ package s28646.sricar.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,8 @@ import s28646.sricar.model.Car;
 import s28646.sricar.model.CarShop;
 import s28646.sricar.repo.CarRepository;
 import s28646.sricar.repo.CarShopRepository;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -39,6 +42,10 @@ public class CarShopController {
         List<CarShopDto> result = allCarShopEntities.stream()
                 .map(carShopDtoMapper::convertToDto)
                 .collect(Collectors.toList());
+        for (CarShopDto dto : result){
+            dto.add(createCarShopSelfLink(dto.getId()));
+            dto.add(createCarShopCarsLink(dto.getId()));
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -47,6 +54,7 @@ public class CarShopController {
         Optional<CarShop> carShop = carShopRepository.findById(carShopId);
         if(carShop.isPresent()) {
             CarShopDetailsDto carShopDetailsDto = carShopDtoMapper.convertToDetailsDto(carShop.get());
+            carShopDetailsDto.add(createCarShopSelfLink(carShopId));
             return new ResponseEntity<>(carShopDetailsDto, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
@@ -103,6 +111,14 @@ public class CarShopController {
 
     private Car convertToEntity(CarDto dto){
         return modelMapper.map(dto, Car.class);
+    }
+
+    private Link createCarShopSelfLink(Long carShopId){
+        return linkTo(methodOn(CarShopController.class).getCarShopById(carShopId)).withSelfRel();
+    }
+
+    private Link createCarShopCarsLink(Long carShopId){
+        return linkTo(methodOn(CarShopController.class).getCarsByCarShopId(carShopId)).withSelfRel();
     }
 }
 
